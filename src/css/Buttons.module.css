@@ -1,0 +1,15 @@
+.btn {
+    background: none;
+    border: none;
+    outline: none;
+    font-weight: bold;
+    font-size: inherit;
+    border-radius: 5px;
+    padding: 5px 20px;
+    cursor: pointer;
+}
+
+.btnDelete {
+    color: white !important;
+    background-color: hsl(340, 100%, 50%) !important;
+}

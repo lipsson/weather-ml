@@ -1,0 +1,36 @@
+.weather {
+    padding: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid black;
+    width: 100%;   
+}
+
+.weather:last-child {
+    border-bottom: none;
+    padding-bottom: 10px;
+}
+
+.weatherHeader {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.weatherTitle {
+    margin: auto;
+    font-size: 1.75rem;
+    width:50%;
+}
+
+.weatherRow {
+    margin: 10px 40px;
+}
+
+.weatherLabel {
+    margin-right: 5px;
+}
+
+.weatherValue {
+    font-weight: lighter;
+}
