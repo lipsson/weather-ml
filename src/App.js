@@ -1,6 +1,6 @@
-import React, { useEffect , useState} from 'react';
+import React, { useEffect , useState, useContext} from 'react';
+import { usePosition } from 'use-position';
 import { WeatherList } from './component/WeatherList/WeatherList';
-
 
 export const WeatherContext = React.createContext();
 
@@ -12,14 +12,16 @@ export const App = () => {
   const [weather, setWeather] = useState([]) 
   const [selectedWeatherId, setSelectedWeatherId] = useState();
   const [city, setCity] = useState("")
-  const [loading, setLoading] = useState(true);
-  const [lat, setLat] = useState(null);
-  const [lng, setLng] = useState(null);
-  const [status, setStatus] = useState(null);
-  const [url, setUrl] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [err , setErr] = useState("")
   
+  const {
+    latitude,
+    longitude,
+    error,
+  } = usePosition();
+
   const weatherContextValue = { handleWeatherAdd, handleWeatherDelete, handleWeatherSelect };
 
   useEffect(() => {
@@ -32,14 +34,12 @@ export const App = () => {
   useEffect(() => localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(weather)), [weather]);
 
   useEffect(() => {
-    setLoading(true);
-    getLocation();
-    if (lat !== undefined || lng !== undefined) {
-      
+    if (latitude !== undefined || longitude !== undefined) {
       const urlCitis = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=pl`;
-      const urlInit = `http://api.openweathermap.org/data/2.5/find?lat=${lat}&lon=${lng}&appid=${apiKey}&units=metric&lang=pl`;
+      const urlInit = `http://api.openweathermap.org/data/2.5/find?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric&lang=pl`;
+      let url = "";
       
-      if (city !== "") setUrl(urlCitis); else setUrl(urlInit);
+      if (city !== "") url = urlCitis; else url = urlInit;
       
       fetch(url)
       .then(handleError)
@@ -61,7 +61,7 @@ export const App = () => {
       )
       .then(setSelectedWeatherId(weather.id))
       .catch(error => {console.log(error)})
-            
+
     } else {
       
       setLoading(true);
@@ -72,20 +72,7 @@ export const App = () => {
 
   },[city])
 
-  const getLocation = () => {
-    if (!navigator.geolocation) {
-      setStatus('Geolokacja w tej przeglądarce nie będzie działać');
-    } else {
-      setStatus('Lokalizuje...');
-      navigator.geolocation.getCurrentPosition((position) => {
-        setStatus(null);
-        setLat(position.coords.latitude);
-        setLng(position.coords.longitude);
-      }, () => {
-        setStatus('Nie moza znaleść pozycji...');
-      });
-    }
-  }
+
 
   function handleError(res)  {
     
